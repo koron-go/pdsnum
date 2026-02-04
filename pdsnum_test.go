@@ -20,6 +20,7 @@ func testEncode(t *testing.T, src, want string) {
 
 func TestEncode(t *testing.T) {
 	testEncode(t, "123", "_ 1 03 2 02 3 01 _")
+	testEncode(t, "1000009", "_ 1 07 9 01 _")
 }
 
 func testDecode(t *testing.T, src, want string) {
@@ -36,4 +37,5 @@ func testDecode(t *testing.T, src, want string) {
 
 func TestDecode(t *testing.T) {
 	testDecode(t, "_ 1 03 2 02 3 01 _", "123")
+	testDecode(t, "_ 1 07 9 01 _", "1000009")
 }

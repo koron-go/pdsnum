@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-// Encode applies PDS conversion to a digit sequence.
+// Encode performs PDS conversion to a digit sequence.
 func Encode(s string) (string, error) {
 	// FIXME: consider decimal points
 	n := len(s)
@@ -32,6 +32,8 @@ func Encode(s string) (string, error) {
 	return bb.String(), nil
 }
 
+// Decode performs the inverse conversion of the PDS conversion of a digit
+// sequence.
 func Decode(s string) (string, error) {
 	elements := strings.Split(strings.TrimSpace(s), " ")
 	// Number of elements should be even.
