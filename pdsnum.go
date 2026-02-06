@@ -1,5 +1,6 @@
-// Package pdsnum provides Positional Description Scheme (PDS) tailored for
-// digit sequences.
+// Package pdsnum provides functions for converting between the Position
+// Description Scheme (PDS) for digit sequences and the normal representation
+// of numbers using Arabic numerals.
 //
 // See https://arxiv.org/abs/2408.12430v1 for details.
 package pdsnum
