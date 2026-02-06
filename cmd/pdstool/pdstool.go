@@ -13,13 +13,6 @@ import (
 
 var decodeMode bool
 
-func decode(dst io.Writer, src io.Reader) error {
-	// TODO:
-	return nil
-}
-
-var rxNormalNumber = regexp.MustCompile(`(?:^|\s)([0-9]+)(?:\s|$)`)
-
 func writeLine(w io.Writer, p []byte, lf bool) error {
 	if _, err := w.Write(p); err != nil {
 		return err
@@ -31,6 +24,46 @@ func writeLine(w io.Writer, p []byte, lf bool) error {
 	}
 	return nil
 }
+
+var rxPDSNumber = regexp.MustCompile(`(_ (?:\d 0\d+ )+_)`)
+
+func decode(dst io.Writer, src io.Reader) error {
+	scanner := bufio.NewScanner(src)
+	for scanner.Scan() {
+		line := scanner.Bytes()
+		matches := rxPDSNumber.FindAllIndex(line, -1)
+		if matches == nil {
+			err := writeLine(dst, line, true)
+			if err != nil {
+				return err
+			}
+			continue
+		}
+		var curr = 0
+		for _, m := range matches {
+			start, end := m[0], m[1]
+			if curr < start {
+				err := writeLine(dst, line[curr:start], false)
+				if err != nil {
+					return err
+				}
+			}
+			s, err := pdsnum.Decode(string(line[start:end]))
+			if err != nil {
+				return err
+			}
+			err = writeLine(dst, []byte(s), false)
+			curr = end
+		}
+		err := writeLine(dst, line[curr:], true)
+		if err != nil {
+			return err
+		}
+	}
+	return scanner.Err()
+}
+
+var rxNormalNumber = regexp.MustCompile(`(?:^|\s)([0-9]+)(?:\s|$)`)
 
 func encode(dst io.Writer, src io.Reader) error {
 	scanner := bufio.NewScanner(src)
