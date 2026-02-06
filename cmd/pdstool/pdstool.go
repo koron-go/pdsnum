@@ -53,6 +53,9 @@ func decode(dst io.Writer, src io.Reader) error {
 				return err
 			}
 			err = writeLine(dst, []byte(s), false)
+			if err != nil {
+				return err
+			}
 			curr = end
 		}
 		err := writeLine(dst, line[curr:], true)
@@ -91,6 +94,9 @@ func encode(dst io.Writer, src io.Reader) error {
 				return err
 			}
 			err = writeLine(dst, []byte(s), false)
+			if err != nil {
+				return err
+			}
 			curr = end
 		}
 		err := writeLine(dst, line[curr:], true)
